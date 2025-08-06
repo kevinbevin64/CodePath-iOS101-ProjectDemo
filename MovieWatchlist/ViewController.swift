@@ -25,10 +25,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         movieListView.dataSource = self
-        movieListView.delegate = self
+        movieListView.delegate = self // Adding this fixes issue where search doesn't return to main view
+        
+        // Set up the title 
         self.title = "Watchlist"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
         movieListView.register(UITableViewCell.self, forCellReuseIdentifier: "MovieCell")
+        
+        // Set up the search controller
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search Movies"
@@ -36,8 +41,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         definesPresentationContext = true
         searchController.searchBar.delegate = self
         searchController.delegate = self
-        movies = []
-        searchResults = []
     }
 
     // MARK: - UISearchBarDelegate

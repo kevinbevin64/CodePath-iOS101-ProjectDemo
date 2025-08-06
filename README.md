@@ -9,7 +9,13 @@
 
 ## Overview
 
-This app helps users keep track of the movies they want to and have watched! 
+This app helps users keep track of the movies they want to and have watched!
+
+Watch a demo! 
+
+<a href="https://www.loom.com/share/94d6fd6d8f204bec820bbc98dd0239a4">
+  <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/94d6fd6d8f204bec820bbc98dd0239a4-361522b3d1f18a66-full-play.gif">
+</a> 
 
 ### Description
 
