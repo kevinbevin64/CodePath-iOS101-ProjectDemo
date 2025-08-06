@@ -70,3 +70,11 @@ Users can manage multiple watchlists, such as "For Family", "Personal", and "For
 ### Networking
 
 - The app accesses The Movie DB's API 
+
+## Sprints / Features
+
+- [x] Create the navigation controller
+- [x] Add in the table view and table view cells (just some empty cells)
+- [x] Add in the search controller 
+- [x] Add ability to call TMDB API to search for movies 
+- [ ] Add persistence using JSON and Codable
