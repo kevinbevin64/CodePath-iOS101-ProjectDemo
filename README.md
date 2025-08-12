@@ -1,4 +1,4 @@
-# Movie Watchlist App (need to think of a name!)
+# Movie Watchlist App
 
 ## Table of Contents
 
