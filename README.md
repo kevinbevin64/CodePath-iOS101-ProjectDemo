@@ -77,4 +77,5 @@ Users can manage multiple watchlists, such as "For Family", "Personal", and "For
 - [x] Add in the table view and table view cells (just some empty cells)
 - [x] Add in the search controller 
 - [x] Add ability to call TMDB API to search for movies 
-- [ ] Add persistence using JSON and Codable
+- [x] Add toggle for watched/unwatched
+- [x] Add persistence using JSON, Codable, and a simple UserDefaults setup

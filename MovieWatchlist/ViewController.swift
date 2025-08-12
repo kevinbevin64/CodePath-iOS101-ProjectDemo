@@ -21,6 +21,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var isSearching: Bool = false
     /// Whether to show the user's movie list after dismissing the search controller.
     var shouldShowUserListAfterSearch = false
+    /// UserDefaults key for persisting the watchlist.
+    private let watchlistDefaultsKey = "watchlist"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +43,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         definesPresentationContext = true
         searchController.searchBar.delegate = self
         searchController.delegate = self
+
+        // Load persisted watchlist and refresh UI
+        loadWatchlist()
+        movieListView.reloadData()
     }
 
     // MARK: - UISearchBarDelegate
@@ -113,6 +119,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath)
         let movie = isSearching ? searchResults[indexPath.row] : movies[indexPath.row]
         cell.textLabel?.text = movie.title
+
+        if isSearching {
+            // While displaying search results, do not show watched state UI.
+            cell.accessoryView = nil
+            cell.accessoryType = .none
+            cell.selectionStyle = .default
+        } else {
+            // In the watchlist, show a checkmark to indicate watched state. Tap to toggle in didSelectRowAt.
+            cell.accessoryView = nil
+            cell.selectionStyle = .default
+            let isWatched = (movies[indexPath.row].hasWatched ?? false)
+            cell.accessoryType = isWatched ? .checkmark : .none
+        }
+
         return cell
     }
 
@@ -123,6 +143,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             let selectedMovie = searchResults[indexPath.row]
             if !movies.contains(where: { $0.id == selectedMovie.id }) {
                 movies.append(selectedMovie)
+                saveWatchlist()
             }
             shouldShowUserListAfterSearch = true
             tableView.deselectRow(at: indexPath, animated: true)
@@ -132,6 +153,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 self?.searchResults = []
                 self?.movieListView.reloadData()
             }
+        } else {
+            // Toggle watched state and refresh the tapped row.
+            let current = movies[indexPath.row].hasWatched ?? false
+            movies[indexPath.row].hasWatched = !current
+            saveWatchlist()
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 
@@ -142,6 +170,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             searchResults = []
             movieListView.reloadData()
             shouldShowUserListAfterSearch = false
+        }
+    }
+
+    // MARK: - Persistence
+    private func saveWatchlist() {
+        do {
+            let data = try JSONEncoder().encode(movies)
+            UserDefaults.standard.set(data, forKey: watchlistDefaultsKey)
+        } catch {
+            print("Failed to encode movies for persistence: \(error)")
+        }
+    }
+
+    private func loadWatchlist() {
+        guard let data = UserDefaults.standard.data(forKey: watchlistDefaultsKey) else { return }
+        do {
+            let decoded = try JSONDecoder().decode([Movie].self, from: data)
+            movies = decoded
+        } catch {
+            print("Failed to decode movies from persistence: \(error)")
         }
     }
 }

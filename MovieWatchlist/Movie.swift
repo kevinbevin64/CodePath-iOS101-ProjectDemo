@@ -23,5 +23,6 @@ struct Movie: Codable, Identifiable {
         case overview
         case posterPath = "poster_path"
         case releaseDate = "release_date"
+        case hasWatched
     }
 }
